@@ -16,24 +16,11 @@ resource "aws_internet_gateway" "spoke_gateway" {
   }
 }
 
-resource "aws_route_table" "spoke_route_table" {
-  vpc_id = aws_vpc.spoke.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.spoke_gateway.id
-  }
-
-  #route {
-  #  cidr_block = var.bastion_cidr
-  #  gateway_id = aws_internet_gateway.spoke_gateway.id
-  #}
-
-  tags = {
-    Name = var.vpc_name
-    Creator = var.owner_tag
-  } 
-} 
+resource "aws_route" "bastion" {
+  route_table_id         = aws_vpc.spoke.main_route_table_id
+  destination_cidr_block = var.bastion_cidr
+  gateway_id             = aws_internet_gateway.spoke_gateway.id
+}
 
 resource "aws_security_group" "allow_traffic" {
   name        = "${var.vpc_name}-allow-traffic"
@@ -77,8 +64,8 @@ resource "aws_security_group" "allow_traffic" {
 output "vpc" {
   value = resource.aws_vpc.spoke
 }
-output "route_table" {
-  value = resource.aws_route_table.spoke_route_table
+output "main_route_table_id" {
+  value = aws_vpc.spoke.main_route_table_id
 }
 output "security_group" {
   value = resource.aws_security_group.allow_traffic

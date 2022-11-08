@@ -18,7 +18,7 @@ module "aws-workload" {
   aws_region        = "us-east-1"
   aws_az            = [ "a" , "b", "c" ][count.index % 3]
   vpc_id            = module.aws-spoke-vpc[0].vpc.id
-  route_table_id    = module.aws-spoke-vpc[0].route_table.id  # need to use main route table to reach tgw
+  route_table_id    = module.aws-spoke-vpc[0].main_route_table_id
   security_group_id = module.aws-spoke-vpc[0].security_group.id
   subnet_cidr       = format("10.64.%d.0/24", count.index % 256)
   ssh_public_key    = var.ssh_public_key

@@ -10,10 +10,6 @@ resource "aws_subnet" "subnet" {
   }
 }
 
-# TODO:
-# needs to be removed for TGW to reach this workload. Done manually right
-# now via AWS UI by associating the subnet with the main routing table instead of this one
-#
 resource "aws_route_table_association" "route_table_association" {
   subnet_id      = aws_subnet.subnet.id
   route_table_id = var.route_table_id

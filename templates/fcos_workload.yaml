@@ -19,7 +19,7 @@ systemd:
       ExecStartPre=-/bin/podman rm nginx
       ExecStartPre=-until ping -c3 -W1 1.1.1.1; do echo "waiting for internet connectivity ..." && sleep 5; done
       ExecStartPre=/bin/podman pull  docker.io/library/nginx:latest
-      ExecStart=/bin/podman run --name nginx -p 8080:80 -v /etc/nginx/index.html:/usr/share/nginx/html/index.html:z nginx
+      ExecStart=/bin/podman run --restart=always -d --name nginx -p 8080:80 -v /etc/nginx/index.html:/usr/share/nginx/html/index.html:z nginx
       [Install]
       WantedBy=multi-user.target
 storage:
